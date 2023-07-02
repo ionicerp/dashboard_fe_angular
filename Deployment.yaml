@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ionic-deployment-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ionic-dashboard
+  template:
+    metadata:
+      labels:
+        app: ionic-dashboard
+    spec:
+      containers:
+      - name: ionic-dashboard
+        image: ghcr.io/ionicerp/dashboard_fe_angular:latest
+        # imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+      - name: my-github-secret
+      # - name: my-regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ionic-service-dashboard
+spec:
+  selector:
+    app: ionic-dashboard
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  # type: LoadBalancer
